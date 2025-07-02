@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eze Chukwudubem Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.0/cdn.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        .font-inter {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: black;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .active::after {
+            width: 100%;
+        }
+        
+        .slide-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .slide-in.visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    </style>
+</head>
+<body class="font-inter text-gray-900 bg-white">
+    <div x-data="{ mobileMenuOpen: false, currentSection: 'home' }" x-init="() => {
+        window.addEventListener('scroll', () => {
+            const sections = ['home', 'about', 'skills', 'projects', 'contact'];
+            for (const section of sections) {
+                const el = document.getElementById(section);
+                if (el) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top <= 100 && rect.bottom >= 100) {
+                        currentSection = section;
+                        break;
+                    }
+                }
+            }
+        });
+        
+        // Initialize animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.slide-in').forEach(el => {
+            observer.observe(el);
+        });
+    }">
+        <!-- Navigation -->
+        <header class="fixed w-full bg-white z-50 shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <a href="#home" class="text-2xl font-bold">Dev<span class="text-gray-500">Portfolio</span></a>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <template x-for="section in ['home', 'about', 'skills', 'projects', 'contact']">
+                        <a :href="'#' + section" 
+                           class="nav-link capitalize text-sm font-medium py-1"
+                           :class="{ 'active': currentSection === section }"
+                           x-text="section"></a>
+                    </template>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" x-show="!mobileMenuOpen"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" x-show="mobileMenuOpen"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <div x-show="mobileMenuOpen" class="md:hidden bg-white border-t border-gray-200" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
+                <div class="container mx-auto px-4 py-3">
+                    <template x-for="section in ['home', 'about', 'skills', 'projects', 'contact']">
+                        <a :href="'#' + section" 
+                           @click="mobileMenuOpen = false"
+                           class="block py-2 capitalize font-medium"
+                           :class="{ 'text-gray-900 font-semibold': currentSection === section, 'text-gray-600': currentSection !== section }"
+                           x-text="section"></a>
+                    </template>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="pt-28 md:pt-40 pb-20 md:pb-32 bg-white relative overflow-hidden">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 slide-in">
+                        <p class="text-gray-600 font-medium mb-2">Hello, I'm</p>
+                        <h1 class="text-4xl md:text-6xl font-bold mb-4">Eze Divine</h1>
+                        <h2 class="text-xl md:text-3xl text-gray-700 font-semibold mb-6">Full Stack Developer</h2>
+                        <p class="text-gray-600 mb-8 max-w-lg">Crafting elegant solutions with code. I specialize in building robust softwares with modern technologies.</p>
+                        
+                        <div class="flex space-x-4">
+                            <a href="#contact" class="px-6 py-3 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-colors">Hire Me</a>
+                            <a href="#projects" class="px-6 py-3 border border-black text-black font-medium rounded-md hover:bg-gray-100 transition-colors">View Work</a>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4 mt-8 hidden">
+                            <a href="#" class="text-gray-700 hover:text-black transition-colors">
+                                <i class="fab fa-github text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-700 hover:text-black transition-colors">
+                                <i class="fab fa-linkedin text-xl"></i>
+                            </a>
+                            <a href="#" class="text-gray-700 hover:text-black transition-colors">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-1/2 mt-12 md:mt-0 slide-in" style="transition-delay: 0.2s;">
+                        <div class="relative">
+                            <div class="border-4 border-black rounded-full overflow-hidden w-64 h-64 md:w-80 md:h-80 mx-auto">
+                                <img src="picture.jpg" alt="Pabs" class="w-full h-full object-cover">
+                            </div>
+                            <div class="absolute top-0 -right-4 md:right-16 bg-black text-white p-4 rounded-lg shadow-lg">
+                                <div class="font-medium">8+ Years</div>
+                                <div class="text-sm">Experience</div>
+                            </div>
+                            <div class="absolute bottom-0 -left-4 md:left-16 bg-black text-white p-4 rounded-lg shadow-lg">
+                                <div class="font-medium">10+</div>
+                                <div class="text-sm">Projects</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-4 md:px-8">
+                <h2 class="text-3xl font-bold mb-16 text-center slide-in">About Me</h2>
+                
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-8 md:mb-0 slide-in">
+                        <div class="bg-black p-1 rounded-lg rotate-3 inline-block">
+                            <img src="picture.jpg" alt="About Me" class="rounded-lg -rotate-3 transform transition-transform hover:rotate-0 duration-300">
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-1/2 md:pl-12 slide-in" style="transition-delay: 0.2s;">
+                        <h3 class="text-2xl font-bold mb-4">Full Stack Developer & Problem Solver</h3>
+                        <p class="text-gray-600 mb-6">I'm a passionate full stack developer with a strong foundation in web development technologies. I enjoy building elegant solutions to complex problems and creating user-friendly experiences.</p>
+                        
+                        <p class="text-gray-600 mb-6">My journey in web development started 8 years ago, and I've been continuously learning and improving my skills ever since. I specialize in building responsive and performant web applications using modern frameworks and technologies.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div>
+                                <p class="font-medium">Name:</p>
+                                <p class="text-gray-600 break-words">Eze Divine</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Email:</p>
+                                <p class="text-gray-600 break-words">ezedubemdivine@gmail.com</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Location:</p>
+                                <p class="text-gray-600 break-words">Abuja, Nigeria.</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Availability:</p>
+                                <p class="text-gray-600 break-words">Full-time</p>
+                            </div>
+                        </div>
+                        
+                        <a href="#contact" class="px-6 py-3 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-colors">Contact Me</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-20 bg-white">
+            <div class="container mx-auto px-4 md:px-8">
+                <h2 class="text-3xl font-bold mb-16 text-center slide-in">My Skills</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="slide-in">
+                        <h3 class="text-xl font-bold mb-6">Technical Skills</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">HTML & CSS</span>
+                                    <span>100%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-black h-2 rounded-full" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">JavaScript & React</span>
+                                    <span>90%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-black h-2 rounded-full" style="width: 90%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">PHP & Laravel</span>
+                                    <span>95%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-black h-2 rounded-full" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">SQL</span>
+                                    <span>80%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-black h-2 rounded-full" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="font-medium">Modern & Responsive Design</span>
+                                    <span>100%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-black h-2 rounded-full" style="width: 100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slide-in" style="transition-delay: 0.2s;">
+                        <h3 class="text-xl font-bold mb-6">Frameworks & Tools</h3>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <!-- React -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-react text-3xl mb-2 text-blue-500"></i>
+                                <p class="font-medium">React</p>
+                            </div>
+
+                            <!-- Next.js -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-code text-3xl mb-2 text-black"></i>
+                                <p class="font-medium">Next.js</p>
+                            </div>
+
+                            <!-- Node.js -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-node-js text-3xl mb-2 text-green-600"></i>
+                                <p class="font-medium">Node.js</p>
+                            </div>
+
+                            <!-- Express -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-server text-3xl mb-2 text-gray-700"></i>
+                                <p class="font-medium">Express.js</p>
+                            </div>
+
+                            <!-- Laravel -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-laravel text-3xl mb-2 text-red-500"></i>
+                                <p class="font-medium">Laravel</p>
+                            </div>
+
+                            <!-- Tailwind CSS -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-wind text-3xl mb-2 text-sky-500"></i>
+                                <p class="font-medium">Tailwind CSS</p>
+                            </div>
+
+                            <!-- Bootstrap -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-bootstrap text-3xl mb-2 text-purple-600"></i>
+                                <p class="font-medium">Bootstrap</p>
+                            </div>
+
+                            <!-- Sass -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-sass text-3xl mb-2 text-pink-500"></i>
+                                <p class="font-medium">Sass</p>
+                            </div>
+
+                            <!-- MySQL -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-database text-3xl mb-2 text-yellow-600"></i>
+                                <p class="font-medium">MySQL</p>
+                            </div>
+
+                            <!-- PostgreSQL -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-database text-3xl mb-2 text-blue-800"></i>
+                                <p class="font-medium">PostgreSQL</p>
+                            </div>
+
+                            <!-- MongoDB -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-leaf text-3xl mb-2 text-green-700"></i>
+                                <p class="font-medium">MongoDB</p>
+                            </div>
+
+                            <!-- Firebase -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-fire text-3xl mb-2 text-orange-500"></i>
+                                <p class="font-medium">Firebase</p>
+                            </div>
+
+                            <!-- Git -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-git-alt text-3xl mb-2 text-orange-500"></i>
+                                <p class="font-medium">Git</p>
+                            </div>
+
+                            <!-- GitHub -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-github text-3xl mb-2 text-gray-800"></i>
+                                <p class="font-medium">GitHub</p>
+                            </div>
+
+                            <!-- Docker -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-docker text-3xl mb-2 text-blue-500"></i>
+                                <p class="font-medium">Docker</p>
+                            </div>
+
+                            <!-- Vite -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-bolt text-3xl mb-2 text-yellow-400"></i>
+                                <p class="font-medium">Vite</p>
+                            </div>
+
+                            <!-- Postman -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fas fa-paper-plane text-3xl mb-2 text-orange-400"></i>
+                                <p class="font-medium">Postman</p>
+                            </div>
+
+                            <!-- Figma -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-figma text-3xl mb-2 text-pink-500"></i>
+                                <p class="font-medium">Figma</p>
+                            </div>
+
+                            <!-- WordPress -->
+                            <div class="p-4 bg-gray-50 rounded-lg text-center hover:shadow-md transition-shadow">
+                                <i class="fab fa-wordpress text-3xl mb-2 text-blue-600"></i>
+                                <p class="font-medium">WordPress</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-4 md:px-8">
+                <h2 class="text-3xl font-bold mb-4 text-center slide-in">My Projects</h2>
+                <p class="text-gray-600 text-center mb-16 max-w-xl mx-auto slide-in">Here are some of my recent projects. Each project was carefully crafted with attention to detail and user experience.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Project 1 -->
+                    <div class="project-card bg-white rounded-lg overflow-hidden shadow-md slide-in">
+                        <div class="relative">
+                            <img src="mopsycoin.io_.jpg" alt="E-commerce Website" class="w-full h-48 object-cover">
+                            <div class="absolute top-0 right-0 bg-black text-white text-xs font-medium px-2 py-1">Web App</div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Crypto Coin Portfolio</h3>
+                            <p class="text-gray-600 mb-4">A comprehensive crypto portfolio tracker with real-time price updates, wallet integration, and performance analytics dashboard.</p>
+
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">HTML</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">CSS</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">JavaScript</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">PHP</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">MySQL</span>
+                            </div>
+                            
+                            <div class="flex space-x-4">
+                                <a href="https://mopsycoin.io" class="text-black hover:text-gray-700 transition-colors">
+                                    <i class="fas fa-external-link-alt mr-1"></i> Live
+                                </a>
+                                <a href="#" class="hidden text-black hover:text-gray-700 transition-colors">
+                                    <i class="fab fa-github mr-1"></i> Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="project-card bg-white rounded-lg overflow-hidden shadow-md slide-in" style="transition-delay: 0.1s;">
+                        <div class="relative">
+                            <img src="cv-swap.jpg" alt="Task Management App" class="w-full h-48 object-cover">
+                            <div class="absolute top-0 right-0 bg-black text-white text-xs font-medium px-2 py-1">Web App</div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Crypto Wallet</h3>
+                            <p class="text-gray-600 mb-4">A secure crypto wallet with multi-currency support, transaction history, wallet backup, and seamless blockchain integration.</p>
+
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">React</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">Node.js</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">Express</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">MongoDB</span>
+                            </div>
+                            
+                            <div class="flex space-x-4">
+                                <a href="https://cv-swap.com" class="text-black hover:text-gray-700 transition-colors">
+                                    <i class="fas fa-external-link-alt mr-1"></i> Live
+                                </a>
+                                <a href="#" class="hidden text-black hover:text-gray-700 transition-colors">
+                                    <i class="fab fa-github mr-1"></i> Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="project-card bg-white rounded-lg overflow-hidden shadow-md slide-in" style="transition-delay: 0.2s;">
+                        <div class="relative">
+                            <img src="pq-cypher.github.io_FoodieRush_.jpg" alt="Portfolio Website" class="w-full h-48 object-cover">
+                            <div class="absolute top-0 right-0 bg-black text-white text-xs font-medium px-2 py-1">Website</div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-2">Food Delivery Website</h3>
+                            <p class="text-gray-600 mb-4">A responsive food delivery website featuring restaurant menus, location-based search, and easy online ordering with secure checkout.</p>
+
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">HTML</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">CSS</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">JavaScript</span>
+                                <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">PHP</span>
+                            </div>
+                            
+                            <div class="flex space-x-4">
+                                <a href="https://pq-cypher.github.io/FoodieRush/" class="text-black hover:text-gray-700 transition-colors">
+                                    <i class="fas fa-external-link-alt mr-1"></i> Live
+                                </a>
+                                <a href="#" class="hidden text-black hover:text-gray-700 transition-colors">
+                                    <i class="fab fa-github mr-1"></i> Code
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-12 hidden">
+                    <a href="#" class="inline-flex items-center px-6 py-3 border border-black text-black font-medium rounded-md hover:bg-gray-100 transition-colors">
+                        View All Projects <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-20 bg-white">
+            <div class="container mx-auto px-4 md:px-8">
+                <h2 class="text-3xl font-bold mb-16 text-left slide-in">Get In Touch</h2>
+                
+                <div class="flex flex-col md:flex-row gap-12">
+                    <div class="md:w-1/2 slide-in">
+                        <h3 class="text-xl font-bold mb-6">Contact Information</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="bg-gray-100 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-envelope text-black"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Email</p>
+                                    <p class="text-gray-600">ezedubemdivine@gmail.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start hidden">
+                                <div class="bg-gray-100 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-phone text-black"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Phone</p>
+                                    <p class="text-gray-600">+234 7032204569</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-gray-100 p-3 rounded-lg mr-4">
+                                    <i class="fas fa-map-marker-alt text-black"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Location</p>
+                                    <p class="text-gray-600">Abuja, Nigeria.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 hidden">
+                            <h4 class="font-medium mb-4">Follow Me</h4>
+                            <div class="flex space-x-4">
+                                <a href="https://github.com/pq-cypher" class="bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://wwww.linkedin.com/in/eze-divine" class="bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="hidden bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="hidden bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors">
+                                    <i class="fab fa-dribbble"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-1/2 slide-in hidden" style="transition-delay: 0.2s;">
+                        <h3 class="text-xl font-bold mb-6">Send Me a Message</h3>
+                        
+                        <form>
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium mb-1">Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm font-medium mb-1">Email</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="subject" class="block text-sm font-medium mb-1">Subject</label>
+                                <input type="text" id="subject" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="message" class="block text-sm font-medium mb-1">Message</label>
+                                <textarea id="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full px-6 py-3 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-colors">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-8 bg-gray-900 text-white">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <div class="mb-4 md:mb-0">
+                        <h2 class="text-2xl font-bold">Dev<span class="text-gray-400">Portfolio</span></h2>
+                    </div>
+                    
+                    <div class="text-sm text-gray-400">
+                        <p>&copy; 2025 Eze Divine. All rights reserved.</p>
+                    </div>
+                    
+                    
+                    <div class="flex space-x-4 mt-4 md:mt-0 hidden">
+                        <a href="https://github.com/pq-cypher" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://wwww.linkedin.com/in/eze-divine" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="hidden text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="hidden text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-dribbble"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
+                    <div class="flex flex-wrap justify-center gap-4 mb-4">
+                        <a href="#home" class="hover:text-white transition-colors">Home</a>
+                        <a href="#about" class="hover:text-white transition-colors">About</a>
+                        <a href="#skills" class="hover:text-white transition-colors">Skills</a>
+                        <a href="#projects" class="hover:text-white transition-colors">Projects</a>
+                        <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+                    </div>
+                    <p>Designed and developed with ❤️</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Animate on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const slideInElements = document.querySelectorAll('.slide-in');
+            slideInElements.forEach((el, index) => {
+                el.style.transitionDelay = `${index * 0.1}s`;
+            });
+            
+            // Initialize GSAP animations
+            gsap.from(".project-card", {
+                duration: 0.8,
+                opacity: 0,
+                y: 50,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: "#projects",
+                    start: "top 80%"
+                }
+            });
+        });
+    </script>
+</body>
+</html>
